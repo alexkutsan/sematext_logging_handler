@@ -26,8 +26,9 @@ class SematextHandler(logging.handlers.SocketHandler):
         if container is not None:
             record_dict["container"] = container
         if record.exc_info:
+            ex_type, ex, tracebk = record.exc_info
             exception_str = StringIO()
-            traceback.print_exception(type(record.exc_info), record.exc_info, record.exc_info.__traceback__, file=exception_str)
+            traceback.print_exception(ex_type, ex, tracebk, file=exception_str)
             record_dict["exc_backtrace"] = exception_str.getvalue()
-            record_dict["exc_name"] = type(record.exc_info).__name__
+            record_dict["exc_name"] = ex_type.__name__
         return (json.dumps(record_dict, default=str) + '\n').encode('utf-8')
